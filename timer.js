@@ -172,13 +172,13 @@ function switchMode(mode) {
 
 function updateModeLabel() {
   if (state.isRunning) {
-    if (state.mode === 'work') $modeLabel.textContent = '专注中...';
-    else if (state.mode === 'shortBreak') $modeLabel.textContent = '休息一下 ☕';
-    else $modeLabel.textContent = '好好休息 🌿';
+    if (state.mode === 'work') $modeLabel.textContent = '专注中';
+    else if (state.mode === 'shortBreak') $modeLabel.textContent = '小憩片刻';
+    else $modeLabel.textContent = '深度休息';
   } else {
-    if (state.mode === 'work') $modeLabel.textContent = '准备工作';
-    else if (state.mode === 'shortBreak') $modeLabel.textContent = '准备休息';
-    else $modeLabel.textContent = '准备长休息';
+    if (state.mode === 'work') $modeLabel.textContent = '待开始';
+    else if (state.mode === 'shortBreak') $modeLabel.textContent = '待休息';
+    else $modeLabel.textContent = '待长休';
   }
 }
 
@@ -210,7 +210,7 @@ function updateWindowTitle() {
   const mins = Math.floor(state.timeLeft / 60);
   const secs = state.timeLeft % 60;
   const time = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  const labels = { work: '🍅 工作', shortBreak: '☕ 休息', longBreak: '🌿 长休息' };
+  const labels = { work: '工作', shortBreak: '小憩', longBreak: '长休' };
   const running = state.isRunning ? '▶ ' : '';
   document.title = `${running}${time} - ${labels[state.mode]}`;
 }
@@ -242,19 +242,20 @@ function renderPomodoroDots() {
 function playChime() {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const notes = [523.25, 659.25, 783.99, 1046.50];
+    const notes = [440, 554.37, 659.25, 880];
     notes.forEach((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.frequency.value = freq;
-      osc.type = 'sine';
-      const t = ctx.currentTime + i * 0.15;
-      gain.gain.setValueAtTime(0.25, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+      osc.type = 'triangle';
+      const t = ctx.currentTime + i * 0.18;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.12, t + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
       osc.start(t);
-      osc.stop(t + 0.4);
+      osc.stop(t + 0.55);
     });
   } catch {}
 }
@@ -262,9 +263,9 @@ function playChime() {
 // ===== 通知 =====
 function showNotification() {
   const msgs = {
-    work: { title: '🍅 工作时间结束！', body: '太棒了！休息一下吧~' },
-    shortBreak: { title: '☕ 休息结束！', body: '准备好了吗？开始新的番茄吧！' },
-    longBreak: { title: '🌿 长休息结束！', body: '充满电了，开始工作吧！' }
+    work: { title: '工作时间结束', body: '休息片刻吧' },
+    shortBreak: { title: '小憩结束', body: '开始新的番茄吧' },
+    longBreak: { title: '长休息结束', body: '精力充沛，开始工作吧' }
   };
 
   const msg = msgs[state.mode] || msgs.work;
