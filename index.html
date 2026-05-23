@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>番茄钟</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 顶部标题 -->
+    <div class="header">
+      <span class="logo">🍅</span>
+      <h1>番茄钟</h1>
+    </div>
+
+    <!-- 模式标签 -->
+    <div class="mode-tabs" id="modeTabs">
+      <button class="mode-tab active" data-mode="work">🍅 工作</button>
+      <button class="mode-tab" data-mode="shortBreak">☕ 短休息</button>
+      <button class="mode-tab" data-mode="longBreak">🌿 长休息</button>
+    </div>
+
+    <!-- 计时器主体 -->
+    <div class="timer-circle">
+      <svg viewBox="0 0 280 280" class="progress-ring">
+        <circle class="ring-bg" cx="140" cy="140" r="120"/>
+        <circle class="ring-progress" id="ringProgress" cx="140" cy="140" r="120"/>
+      </svg>
+      <div class="timer-display">
+        <span class="time-text" id="timeDisplay">25:00</span>
+        <span class="mode-label" id="modeLabel">准备工作</span>
+      </div>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="controls">
+      <button class="btn btn-primary" id="btnStart">
+        <span class="btn-icon">▶</span> 开始
+      </button>
+      <button class="btn btn-secondary" id="btnPause" disabled>
+        <span class="btn-icon">⏸</span> 暂停
+      </button>
+      <button class="btn btn-ghost" id="btnReset">
+        <span class="btn-icon">↺</span> 重置
+      </button>
+    </div>
+
+    <!-- 番茄计数 -->
+    <div class="pomodoro-count" id="pomodoroCount">
+      <span class="count-label">今日番茄</span>
+      <span class="count-dots" id="countDots"></span>
+      <span class="count-number" id="countNumber">0</span>
+    </div>
+
+    <!-- 设置按钮 -->
+    <button class="btn-settings" id="btnSettings">⚙️ 设置</button>
+  </div>
+
+  <!-- 设置弹窗 -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <h2>⚙️ 自定义时长</h2>
+      <div class="setting-row">
+        <label>工作时间 <span class="unit">(分钟)</span></label>
+        <div class="input-stepper">
+          <button class="stepper-btn" data-target="workDuration" data-dir="-1">−</button>
+          <input type="number" id="inputWork" min="1" max="99" value="25">
+          <button class="stepper-btn" data-target="workDuration" data-dir="1">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <label>短休息 <span class="unit">(分钟)</span></label>
+        <div class="input-stepper">
+          <button class="stepper-btn" data-target="shortBreakDuration" data-dir="-1">−</button>
+          <input type="number" id="inputShortBreak" min="1" max="99" value="5">
+          <button class="stepper-btn" data-target="shortBreakDuration" data-dir="1">+</button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <label>长休息 <span class="unit">(分钟)</span></label>
+        <div class="input-stepper">
+          <button class="stepper-btn" data-target="longBreakDuration" data-dir="-1">−</button>
+          <input type="number" id="inputLongBreak" min="1" max="99" value="15">
+          <button class="stepper-btn" data-target="longBreakDuration" data-dir="1">+</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="btnSaveSettings">保存</button>
+        <button class="btn btn-ghost" id="btnCloseSettings">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="timer.js"></script>
+</body>
+</html>
